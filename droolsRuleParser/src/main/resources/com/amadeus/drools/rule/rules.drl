@@ -1,0 +1,77 @@
+package com.amadeus.droolsfeature.rules 
+
+declare  BzrFlightDeclare
+    number : int 
+    airline : String 
+    matchList : java.util.ArrayList 
+end
+
+ 
+
+declare  BzrFlightMatchDeclare
+    name : String 
+    lom : int 
+end
+
+ 
+
+declare  Booking
+    @release( 0 )
+    customer : String 
+    flight : BzrFlightDeclare 
+    returnFlight : BzrFlightDeclare 
+end
+
+ 
+
+function void addMatch( BzrFlightDeclare k, String keywordName, int levelOfMatch ) {
+    BzrFlightMatchDeclare match = new BzrFlightMatchDeclare();
+    match.setName(keywordName);
+    match.setLom(levelOfMatch);
+    if (k.getMatchList() == null) k.setMatchList(new java.util.ArrayList()); 
+          k.getMatchList().add(match);
+}
+
+ 
+
+ 
+
+function BzrFlightMatchDeclare createBzrFlightMatchDeclare(String name){
+    BzrFlightMatchDeclare bfmd = new BzrFlightMatchDeclare();
+    bfmd.setName(name);
+    return bfmd;
+
+}
+
+
+rule "insert flight"
+no-loop 
+salience 10000
+when
+Booking (this != null, f:flight != null)
+then
+ insert(f);
+end 
+
+rule "FLG1"
+    //lock-on-active true
+   // agenda-group "abr.keywords"
+   dialect "mvel"
+when
+    k := BzrFlightDeclare( airline == "1A" , $lom:5,  createBzrFlightMatchDeclare("FLG1") not memberOf flight.matchList)
+then
+     addMatch(k, "FLG1", $lom);
+     update(k);
+end
+
+ 
+
+ 
+
+rule "client rule"
+dialect "mvel"
+when
+    b := Booking( customer=="Bob", createBzrFlightMatchDeclare("FLG1") memberOf flight.matchList) 
+then
+modify (b) {setCustomer("Bobby");}
+end

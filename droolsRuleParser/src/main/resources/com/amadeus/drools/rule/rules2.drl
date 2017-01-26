@@ -1,0 +1,56 @@
+package com.amadeus.droolsfeature.rules 
+
+declare  BzrFlightDeclare
+    number : int 
+    airline : String 
+    matchList : java.util.ArrayList 
+end
+
+ 
+
+declare  BzrFlightMatchDeclare
+    name : String 
+    lom : int 
+end
+
+ 
+
+declare  Booking
+    @release( 0 )
+    customer : String 
+    flight : BzrFlightDeclare 
+    returnFlight : BzrFlightDeclare 
+end
+
+ 
+
+function void addMatch( BzrFlightDeclare k, String keywordName, int levelOfMatch ) {
+    BzrFlightMatchDeclare match = new BzrFlightMatchDeclare();
+    match.setName(keywordName);
+    match.setLom(levelOfMatch);
+    if (k.getMatchList() == null) k.setMatchList(new java.util.ArrayList()); 
+          k.getMatchList().add(match);
+}
+
+ 
+
+ 
+
+function BzrFlightMatchDeclare createBzrFlightMatchDeclare(String name){
+    BzrFlightMatchDeclare bfmd = new BzrFlightMatchDeclare();
+    bfmd.setName(name);
+    return bfmd;
+
+}
+
+
+rule "insert flight"
+no-loop 
+salience 10000
+when
+Booking (this != null, f:flight != null)
+then
+ insert(f);
+  System.out.println("yes");
+end 
+

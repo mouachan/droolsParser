@@ -1,0 +1,62 @@
+package com.amadeus.drools.rules.parser 
+
+import java.util.List
+
+declare  BzrFlightDeclare
+    number : int 
+    airline : String 
+    matchList : java.util.ArrayList 
+end
+
+ 
+
+declare  BzrFlightMatchDeclare
+    name : String 
+    lom : int 
+end
+
+ 
+
+declare  Booking
+    @release( 0 )
+    customer : String 
+    flight : BzrFlightDeclare 
+    returnFlight : BzrFlightDeclare 
+end
+
+ 
+
+function void addMatch( BzrFlightDeclare k, String keywordName, int levelOfMatch ) {
+    BzrFlightMatchDeclare match = new BzrFlightMatchDeclare();
+    match.setName(keywordName);
+    match.setLom(levelOfMatch);
+    if (k.getMatchList() == null) k.setMatchList(new java.util.ArrayList()); 
+          k.getMatchList().add(match);
+}
+
+ 
+
+ 
+
+function BzrFlightMatchDeclare createBzrFlightMatchDeclare(String name){
+    BzrFlightMatchDeclare bfmd = new BzrFlightMatchDeclare();
+    bfmd.setName(name);
+    return bfmd;
+
+}
+
+
+
+ 
+rule "crule"
+no-loop 
+salience 10000
+dialect "mvel" 
+when
+a:Booking (this != null or f:flight != null)
+or c:Booking (this != null, g:flight != "toto")
+or d:Booking (this != null, h:flight matches "titi")
+then
+ insert(f);
+ System.out.println("yes");
+end 
