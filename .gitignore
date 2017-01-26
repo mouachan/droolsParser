@@ -1,0 +1,12 @@
+*.metadata
+*.DS_STORE
+*target
+*RemoteSystemsTempFiles
+*.log
+*log/
+*logs/
+*repository
+*repo-origin
+*.recommenders
+.settings/
+.project
