@@ -26,7 +26,7 @@
 	String rstojson = rp.convertObjectToJson(ruleset);
 ```
 #### RuleSet Model
-![alt tag](https://github.com/mouachan/droolsParser/tree/master/ruleset_uml_model.png)
+![rulset_model](https://cloud.githubusercontent.com/assets/12033900/22420352/5d1b47e8-e6e2-11e6-848e-0b5b7d7bb616.png)
 
 
 ### Documentation
